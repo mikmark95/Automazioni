@@ -1,6 +1,7 @@
 from selenium import webdriver
 
 
+path = 'C:\\Users\\emmes\\Documents\\Python Scripts\\chromedriver.exe'
 def get_driver():
     '''
     Funzione che imposta i driver per la connessione con la speficia pagiva web
@@ -22,7 +23,7 @@ def get_driver():
 
 
     #Driver per utilizzare il browser Google Chrome
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome( executable_path=path,options=options )
     #Aggiungo l'url della pagina web da raggiungere
     driver.get("https://automated.pythonanywhere.com/")
 

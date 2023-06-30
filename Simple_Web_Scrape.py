@@ -1,7 +1,8 @@
 from selenium import webdriver
-
+from selenium.webdriver.chrome.service import Service
 
 path = 'C:\\Users\\emmes\\Documents\\Python Scripts\\chromedriver.exe'
+service = Service(executable_path=path)
 def get_driver():
     '''
     Funzione che imposta i driver per la connessione con la speficia pagiva web

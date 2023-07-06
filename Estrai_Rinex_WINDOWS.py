@@ -29,7 +29,8 @@ def get_driver(url):
 
 
     #Driver per utilizzare il browser Google Chrome
-    driver = webdriver.Chrome(executable_path=path, options=options)
+    # driver = webdriver.Chrome(executable_path=path, options=options)
+    driver = webdriver.Chrome(service=service, options=options)
     #Aggiungo l'url della pagina web da raggiungere
     driver.get(url)
 

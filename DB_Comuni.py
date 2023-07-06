@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import csv
-
+from geopy.distance import geodesic
 from geopy import Nominatim
 
 """
@@ -40,12 +40,15 @@ def unisci_excell(file_list, output):
     df_merged.to_excel(output, index=False)
 
 
-if __name__=='__main__':
-    regione='LOMBARDIA'
+def inserisci_colonne_excell(path_input, colonna):
+    df = pd.read_excel(path_input)
+    df[colonna] = ""
+    for index, row in df.iterrows():
+        df.at[index, colonna] = ""
+    df.to_excel(path_input, index=False)
 
-    path_input =f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\Comune_Regione_Filtrato_{regione}.xlsx"
-    path_output =f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\Comune_Regione_Filtrato_{regione}_OUTPUT.xlsx"
 
+def inserici_coordinate_DB(path_input,path_output):
     df = pd.read_excel(path_input)
     df['coordinate'] = ""
     df['latitude'] = "" #prova
@@ -65,5 +68,55 @@ if __name__=='__main__':
     df.to_excel(path_output, index=False)
 
 
+def distanza_AB(a:tuple[float,float], b:tuple[float,float]):
+    return geodesic(a,b).km
+
+if __name__=='__main__':
+
+
+    pass
+
+    '''
+    EXCELL_REGIONE                          EXCELL_SITI
+    lat_comune, long_comune                 lat_sito, long_sito
+
+    for comune in range(n.comuni):
+        res = ('', 0)
+        for sito in range(n.siti):
+            distanza = calcola_dst(lat_comune, long_comune, lat_sito_long_sito)
+            if distanza < res[1]:
+                res = (sito, distanza)
+        modifica_sito(comune,res)
+    print('TERMINATO')
+
+    '''
+
+    #--------------------------------------------------------------------------------------
+
+    #
+    # regione='VENETO'
+    #
+    # path_input =f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\Comune_Regione_Filtrato_{regione}.xlsx"
+    # path_output =f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\Comune_Regione_Filtrato_{regione}_OUTPUT.xlsx"
+    #
+    # df = pd.read_excel(path_input)
+    # df['coordinate'] = ""
+    # df['latitude'] = "" #prova
+    # df['longitude'] = "" #prova
+    #
+    #
+    # for index, row in df.iterrows():
+    #     comune = str(row['comune'])
+    #
+    #     print(index,comune, type(comune))
+    #     coordinate = ottieni_coordinate(comune)
+    #     if coordinate is not None:
+    #         df.at[index, 'coordinate'] = coordinate
+    #         df.at[index, 'latitude'] = coordinate[0] #prova
+    #         df.at[index, 'longitude'] = coordinate[1] #prova
+    #
+    # df.to_excel(path_output, index=False)
+
+    #---------------------------------------------------------------------------------------
 
 

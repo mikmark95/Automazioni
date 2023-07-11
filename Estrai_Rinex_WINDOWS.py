@@ -30,8 +30,8 @@ def get_driver(url):
 
 
     #Driver per utilizzare il browser Google Chrome
-    driver = webdriver.Chrome(executable_path=path, options=options)
-    # driver = webdriver.Chrome(service=service, options=options)
+    # driver = webdriver.Chrome(executable_path=path, options=options)
+    driver = webdriver.Chrome(service=service, options=options)
 
 
     #Aggiungo l'url della pagina web da raggiungere
@@ -55,13 +55,13 @@ def main():
     time.sleep(2)
     #inserisce password
     driver.find_element(by="id", value="Password").send_keys("a2160"+Keys.RETURN)
-    time.sleep(2)
+    time.sleep(5)
     #inserisce nome del sito
     driver.find_element(by="id", value="searchSites").send_keys('AGRI')
     time.sleep(2)
     #seleziona unisci file
     driver.find_element(by="id", value="enableConcatenation").click()
-    time.sleep(5)
+    time.sleep(2)
     #seleziona il sito
     driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div[5]/div[4]/div[2]/div[2]/div/div/div[1]/div[1]").click()
     time.sleep(2)

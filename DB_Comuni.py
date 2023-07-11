@@ -3,6 +3,8 @@ import numpy as np
 import csv
 from geopy.distance import geodesic
 from geopy import Nominatim
+import openpyxl
+
 
 """
 Questo insieme di funzioni di utilità servono per leggere un elenco di comuni da un foglio excell
@@ -71,11 +73,98 @@ def inserici_coordinate_DB(path_input,path_output):
 def distanza_AB(a:tuple[float,float], b:tuple[float,float]):
     return geodesic(a,b).km
 
+
+def associa_sito(file_comuni, file_siti, file_output, path_risultato):
+    '''Funzione che legge uno per uno tutti i comuni presenti in un database, e gli associa in un altro file la corrispondenza comune-sito rinex.'''
+    #leggo i file di input
+    df_comuni = pd.read_excel(file_comuni)
+    df_siti = pd.read_excel(file_siti)
+    df_output = pd.read_excel(file_output)
+
+
+    #Itero su ogni comune
+    for ind_comuni, riga_comuni in df_comuni.iterrows():
+        res = ('', 0)
+
+        comune = riga_comuni['comune']
+        #eatraggo le coordiante di quel comune
+        lat_comune = riga_comuni['latitude']
+        long_comune = riga_comuni['longitude']
+
+        #itero su ogni sito
+        for ind_siti, riga_siti in df_siti.iterrows():
+
+            #estraggo le coordinate di ogni sito
+            lat_siti = riga_siti['Latitude']
+            long_siti = riga_siti['Longitude']
+
+            #calcola la distanza
+            distanza = distanza_AB((lat_comune,long_comune),(lat_siti,long_siti))
+
+            #aggiorno il risultato
+            if res[1]== 0:
+                sito = riga_siti['Name']
+                res = (sito, distanza)
+
+            elif distanza < res[1]:
+                sito = riga_siti['Name']
+                res = (sito, distanza)
+
+        df_output.at[ind_comuni,'Comune']=comune
+        df_output.at[ind_comuni,'Sito']=res[0]
+        df_output.at[ind_comuni,'Distanza']=res[1]
+        print(df_output['Comune']+ ' Terminato!')
+
+    df_output.to_excel(path_risultato, index=False)
+
+
+
+
+
 if __name__=='__main__':
-
-
     pass
 
+    # lst =[
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_ABRUZZO.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_BASILICATA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_CALABRIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_CAMPANIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_EMILIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_FRIULI.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_LAZIO.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_LIGURIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_LOMBARDIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_MARCHE.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_MOLISE.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_PIEMONTE.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_PUGLIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_SARDEGNA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_SICILIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_TOSCANA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_TRENTINO.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_UMBRIA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_VALLE AOSTA.xlsx",
+    #     "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\risultato_VENETO.xlsx"
+    #     ]
+    # out = "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\ELENCO SITI-COMUNI\\Risultato_ITALIA.xlsx"
+    #
+    # unisci_excell(lst,out)
+
+
+    # #-----------------------------------------------------------------------------------------------------------------------------------------
+    #
+    # comune = 'VENETO'
+    # file_comuni = f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\\Comune_Regione_Filtrato_{comune}_OUTPUT.xlsx"
+    # file_siti = "C:\\Users\\mmarchetti\Desktop\\ELENCO STAZIONI RINEX\\Elenco siti-Rinex_EXCELL.xlsx"
+    # file_output = "C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\ELENCO SITI-COMUNI\\output_1.xlsx"
+    # path_risultato = f"C:\\Users\\mmarchetti\\Desktop\\ELENCO STAZIONI RINEX\\ELENCO COMUNI\\OUTPUT\ELENCO SITI-COMUNI\\risultato_{comune}.xlsx"
+    #
+    #
+    # associa_sito(file_comuni,file_siti,file_output,path_risultato)
+    #
+    #
+    # #-----------------------------------------------------------------------------------------------------------------------------------------
+    #
     '''
     EXCELL_REGIONE                          EXCELL_SITI
     lat_comune, long_comune                 lat_sito, long_sito

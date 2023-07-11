@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 
 path = 'C:\\Users\\emmes\\Documents\\Python Scripts\\chromedriver.exe'
 service = Service(executable_path=path)
+
 def get_driver(url):
     '''
     Funzione che imposta i driver per la connessione con la speficia pagiva web
@@ -29,57 +30,41 @@ def get_driver(url):
 
 
     #Driver per utilizzare il browser Google Chrome
-    # driver = webdriver.Chrome(executable_path=path, options=options)
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(executable_path=path, options=options)
+    # driver = webdriver.Chrome(service=service, options=options)
+
+
     #Aggiungo l'url della pagina web da raggiungere
     driver.get(url)
 
     return driver
 
 
-def clean_text(stringa:str):
-    '''
-    Funzione che isola la parte di testo che ci interessa
-    :param stringa:
-    :return:
-    '''
 
-    l = stringa.split(':')
-    return l[1]
-
-
-def cattura_testo(ripetizioni:int, driver, output):
-    '''
-    Cattura il testo e salva il contenuto in un file txt, viene eseguito un numero di volte pari a ripetizioni
-    :param ripetizioni: numero iterazioni
-    :param driver: driver per leggere il sito
-    :param output: percorso di output dei file
-    :return:
-    '''
-    for x in range(ripetizioni):
-
-        time.sleep(2)
-        text = driver.find_element(by='id', value="displaytimer")
-        t = clean_text(text.text)
-        with open(output+f'{datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")}', mode='w',encoding='UTF-8') as out:
-            out.write(t)
-    return f'FILE CREATI !\nDisponibili in {output}'
 
 
 def main():
     # url = "https://it.nrtk.eu/sbc/Account/Index?returnUrl=%2Fsbc"
     url = "https://it.nrtk.eu/sbc/User/Xpos/RinexDataRequest"
     driver = get_driver(url)
-    #Estraiamo un elemento dal driver tramite la ricerca tramite il xpath
+    #accetta i cookie
+    driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div/div/div[3]/button[1]").click()
+    time.sleep(2)
+    #inserisce username
     driver.find_element(by="id", value="UserName").send_keys("15275984")
     time.sleep(2)
+    #inserisce password
     driver.find_element(by="id", value="Password").send_keys("a2160"+Keys.RETURN)
     time.sleep(2)
-    driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div[1]/div/div/div[3]/button[1]").click()
+    #inserisce nome del sito
+    driver.find_element(by="id", value="searchSites").send_keys('AGRI')
     time.sleep(2)
-    driver.find_element(by="id", value="searchSites").send_keys('Padova')
+    #seleziona unisci file
+    driver.find_element(by="id", value="enableConcatenation").click()
+    time.sleep(5)
+    #seleziona il sito
+    driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div[5]/div[4]/div[2]/div[2]/div/div/div[1]/div[1]").click()
     time.sleep(2)
-
 
 
 if __name__ == '__main__':

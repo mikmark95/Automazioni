@@ -56,6 +56,11 @@ def main():
     #inserisce password
     driver.find_element(by="id", value="Password").send_keys("a2160"+Keys.RETURN)
     time.sleep(5)
+
+    #seleziona data
+    driver.find_element(by='xpath', value='//*[@id="startDateInput"]').click()
+    time.sleep(15)
+
     #inserisce nome del sito
     driver.find_element(by="id", value="searchSites").send_keys('AGRI')
     time.sleep(2)
@@ -63,7 +68,7 @@ def main():
     driver.find_element(by="id", value="enableConcatenation").click()
     time.sleep(2)
     #seleziona il sito
-    driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div[5]/div[4]/div[2]/div[2]/div/div/div[1]/div[1]").click()
+    driver.find_element(by="xpath", value="/html/body/div[2]/div[1]/div[2]/div[5]/div[3]/div[1]/div[1]/ul[1]/li[2]/div/span").click()
     time.sleep(2)
 
 

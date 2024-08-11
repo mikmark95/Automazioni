@@ -38,7 +38,7 @@ def clean_text(stringa:str):
     '''
     Funzione che isola la parte di testo che ci interessa
     :param stringa:
-    :return:
+    :return: String
     '''
 
     l = stringa.split(':')
@@ -51,7 +51,7 @@ def cattura_testo(ripetizioni:int, driver, output):
     :param ripetizioni: numero iterazioni
     :param driver: driver per leggere il sito
     :param output: percorso di output dei file
-    :return:
+    :return: String
     '''
     for x in range(ripetizioni):
 

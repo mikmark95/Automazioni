@@ -1,6 +1,5 @@
 from selenium import webdriver
 
-
 path = 'C:\\Users\\emmes\\Documents\\Python Scripts\\chromedriver.exe'
 def get_driver():
     '''
@@ -20,22 +19,17 @@ def get_driver():
     #Serve per abilitare i nostri script sui browser
     options.add_experimental_option("excludeSwitches",["enable-automation"])
     options.add_argument("disable-blink-features=AutomationControlled")
-
-
     #Driver per utilizzare il browser Google Chrome
     driver = webdriver.Chrome( executable_path=path,options=options )
     #Aggiungo l'url della pagina web da raggiungere
     driver.get("https://automated.pythonanywhere.com/")
-
     return driver
-
 
 def main():
     driver = get_driver()
     #Estraiamo un elemento dal driver tramite la ricerca tramite il xpath
     element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[1]")
     return element.text
-
 
 if __name__ == '__main__':
     print(main())
